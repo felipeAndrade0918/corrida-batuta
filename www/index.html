@@ -1,0 +1,30 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Corrida Batuta</title>
+	<script type="text/javascript" src="lib/phaser.min.js"></script>
+	<script type="text/javascript" src="game/models/Player.js"></script>
+	<script type="text/javascript" src="game/models/Ground.js"></script>
+	<script type="text/javascript" src="game/models/Person.js"></script>
+	<script type="text/javascript" src="game/states/Game.js"></script>
+</head>
+<body>
+	<style type="text/css">
+		body {
+			margin: 0;
+		}
+	</style>
+	<script type="text/javascript">
+		// Bootstraping the game
+		function boot() {
+			var game = new Phaser.Game(320, 240, Phaser.AUTO, 'gameContainer');
+			game.state.add('game', Main.Game);
+			game.state.start('game');
+		}
+
+		window.onload = function() {
+			boot();
+		};
+	</script>
+</body>
+</html>
