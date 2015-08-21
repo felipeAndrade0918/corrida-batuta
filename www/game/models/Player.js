@@ -4,6 +4,7 @@ Main.Player = function(game, x, y) {
 	Phaser.Sprite.call(this, game, x, y, 'player');
 
 	// Regular properties
+	this.health = 3;
 	this.anchor.set(0.5, 0.7);
 	this.scale.set(1.5, 1.5);
 	this.animations.add('running', [6, 7, 8, 7], 10, true);
@@ -28,4 +29,36 @@ Main.Player.prototype.handleInput = function() {
 	if ((this.game.input.mousePointer.isDown || this.game.input.pointer1.isDown) && this.body.touching.down) {
 		this.body.velocity.y = -200;
 	}
+};
+
+Main.Player.prototype.damagePlayer = function() {
+	if (!this.invincibility) {
+		this.damage(1);
+
+		this.hearts[this.hearts.length -1].kill();
+		this.hearts.splice(this.hearts.length - 1, 1);
+		
+		this.invincibility = true;
+
+		this.game.time.events.add(2000, this.toggleInvincibility, this, this);
+
+		this.playerIsInvencible = this.game.add.tween(this);
+		this.playerIsInvencible.to({ alpha: 0.3 }, 500);
+		this.playerIsInvencible.to({ alpha: 1 }, 500);
+		this.playerIsInvencible.to({ alpha: 0.3 }, 500);
+		this.playerIsInvencible.to({ alpha: 1 }, 500);
+		this.playerIsInvencible.start();
+		this.playerIsInvencible.onComplete.removeAll();
+	}
+};
+
+Main.Player.prototype.toggleInvincibility = function() {
+	this.invincibility = false;
+};
+
+Main.Player.prototype.setupHealth = function() {
+	this.hearts = [];
+	this.hearts.push(this.game.add.sprite(10, 10, 'heart'));
+	this.hearts.push(this.game.add.sprite(25, 10, 'heart'))
+	this.hearts.push(this.game.add.sprite(40, 10, 'heart'))
 };

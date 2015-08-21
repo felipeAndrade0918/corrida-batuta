@@ -31,6 +31,7 @@ Main.Game.prototype = {
 
 		this.load.spritesheet('player', 'assets/guilherme.png', 32, 49);
 		this.load.image('background', 'assets/rua_com_nuvem.png');
+		this.load.image('heart', 'assets/heart.png');
 
 		this.load.spritesheet('ricardo', 'assets/ricardo.png', 32, 49);
 		this.peopleNames.push('ricardo');
@@ -56,7 +57,7 @@ Main.Game.prototype = {
 		this.world.sendToBack(this.background);
 
 		// The player. He starts invisible
-		this.player = new Main.Player(this.game, 50, this.world.height - 100);
+		this.player = new Main.Player(this.game, 50, this.world.height - 60);
 		this.player.alpha = 0;
 		this.player.events.onKilled.add(this.resetGame, this);
 
@@ -72,7 +73,7 @@ Main.Game.prototype = {
 
 	update: function() {
 		this.physics.arcade.collide(this.player, this.ground);
-		this.physics.arcade.collide(this.player, this.peopleGroup, this.killPlayer, null, this);
+		this.physics.arcade.overlap(this.player, this.peopleGroup, this.player.damagePlayer, null, this.player);
 
 		if (this.gameHasStarted) {
 			this.background.tilePosition.x -= 4;
@@ -97,20 +98,19 @@ Main.Game.prototype = {
 		}
 	},
 
-	killPlayer: function(player, person) {
-		player.kill();
-	},
-
 	resumeGame: function() {
 		// Here we hide the texts, pause the Tween and revive the player if necessary
 		this.gameTitleTween.pause();
 		this.pressStart.alpha = 0;
 		this.gameTitle.alpha = 0;
+
 		this.gameHasStarted = true;
+
 		if (!this.player.alive) {
-			this.player.reset(50, this.world.height - 100, 1);
+			this.player.reset(50, this.world.height - 60, 3);
 		}
 		this.player.alpha = 1;
+		this.player.setupHealth();
 	},
 
 	resetGame: function() {

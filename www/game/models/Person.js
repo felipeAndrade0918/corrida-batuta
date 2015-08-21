@@ -12,7 +12,6 @@ Main.Person = function(game, x, y, image) {
 	// Physics properties
 	this.game.physics.arcade.enable(this);
 	this.body.setSize(17, 35);
-	this.body.immovable = true;
 	this.body.velocity.x = -200;
 
 	this.animations.play('walking');
