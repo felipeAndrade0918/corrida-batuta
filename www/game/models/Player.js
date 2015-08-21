@@ -32,16 +32,19 @@ Main.Player.prototype.handleInput = function() {
 };
 
 Main.Player.prototype.damagePlayer = function() {
+	// If the player is not invincible then we can damage him
 	if (!this.invincibility) {
 		this.damage(1);
 
+		// We remove the last heart
 		this.hearts[this.hearts.length -1].kill();
 		this.hearts.splice(this.hearts.length - 1, 1);
 		
+		// Now the player is invincible for the next 2 seconds
 		this.invincibility = true;
-
 		this.game.time.events.add(2000, this.toggleInvincibility, this, this);
 
+		// Animations for the invicibility frames
 		this.playerIsInvencible = this.game.add.tween(this);
 		this.playerIsInvencible.to({ alpha: 0.3 }, 500);
 		this.playerIsInvencible.to({ alpha: 1 }, 500);
@@ -57,6 +60,7 @@ Main.Player.prototype.toggleInvincibility = function() {
 };
 
 Main.Player.prototype.setupHealth = function() {
+	// Creates some heart sprites which will act as the player's health
 	this.hearts = [];
 	this.hearts.push(this.game.add.sprite(10, 10, 'heart'));
 	this.hearts.push(this.game.add.sprite(25, 10, 'heart'))

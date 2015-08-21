@@ -21,7 +21,6 @@ Main.Game.prototype = {
             this.scale.pageAlignHorizontally = true;
             this.scale.pageAlignVertically = true;
         }
-
         this.scale.refresh();
     },
 
@@ -65,10 +64,16 @@ Main.Game.prototype = {
 		this.ground = new Main.Ground(this.game, 0, this.world.height - 10);
 
 		// Sets up the title screen
-		this.createGameText();
+		this.createTitleText();
 
+		// These timers haven't started yet, they are just being created
 		// Keeps spawning people when the game is running
-		this.time.events.loop(this.rnd.integerInRange(3, 7) * 1000, this.spawnPerson, this);
+		this.personTimer = this.time.create(false);
+		this.personTimer.loop(this.rnd.integerInRange(3, 7) * 1000, this.spawnPerson, this);
+
+		// Keeps updating the score
+		this.scoreTimer = this.time.create();
+		this.scoreTimer.loop(Phaser.Timer.SECOND, this.updateScore, this);
 	},
 
 	update: function() {
@@ -83,45 +88,92 @@ Main.Game.prototype = {
 			this.background.tilePosition.x -= 1;
 
 			if (this.input.pointer1.isDown || this.input.mousePointer.isDown) {
-				this.resumeGame();
+				this.startGame();
 			}
 		}
-
 	},
 
 	spawnPerson: function() {
 		// We only spawn people when the game is running
-		if (this.gameHasStarted) {
-			var personPosition = this.rnd.integerInRange(0, this.peopleNames.length - 1);
-			var person = new Main.Person(this.game, this.world.width, this.world.height - 25, this.peopleNames[personPosition]);
-			this.peopleGroup.add(person);
-		}
+		var personPosition = this.rnd.integerInRange(0, this.peopleNames.length - 1);
+		var person = new Main.Person(this.game, this.world.width, this.world.height - 25, this.peopleNames[personPosition]);
+		this.peopleGroup.add(person);
 	},
 
-	resumeGame: function() {
+	startGame: function() {
 		// Here we hide the texts, pause the Tween and revive the player if necessary
 		this.gameTitleTween.pause();
 		this.pressStart.alpha = 0;
 		this.gameTitle.alpha = 0;
 
-		this.gameHasStarted = true;
-
+		// If the player just died we revive him and setup his health
 		if (!this.player.alive) {
 			this.player.reset(50, this.world.height - 60, 3);
 		}
 		this.player.alpha = 1;
 		this.player.setupHealth();
+		
+		// If the score text doesn't exist we create it
+		if (!this.score) {
+			this.createScoreText();
+		}
+
+		// If the personTimer is paused we resume it, otherwise we start it
+		if (this.personTimer.paused) {
+			this.personTimer.resume();
+		}
+		if (!this.personTimer.running) {
+			this.personTimer.start();
+		}
+
+		// If the scoreTimer is paused we resume it and reset the score, otherwise we start it
+		if (this.scoreTimer.paused) {
+			this.score.text = 'Pontuação: 0';
+			this.score.alpha = 1;
+			this.scoreTimer.resume();
+		}
+		if (!this.scoreTimer.running) {
+			this.scoreTimer.start();
+		}
+
+		// The game is ready to go
+		this.gameHasStarted = true;
 	},
 
 	resetGame: function() {
 		// Here we resume the Tween and show the texts again
 		this.gameTitleTween.resume();
 		this.gameHasStarted = false;
+
+		// We are displaying the title screen again
 		this.pressStart.alpha = 1;
 		this.gameTitle.alpha = 1;
+
+		// Hide the score text and reset its value
+		this.score.alpha = 0;
+		this.scorePoints = 0;
+
+		// We pause the timers since the game is now at the title screen
+		this.personTimer.pause();
+		this.scoreTimer.pause();
 	},
 
-	createGameText: function() {
+	createScoreText: function() {
+		// Creates the score text
+		var scoreText = 'Pontuação: 0';
+		var scoreStyle = { font: 'bold 18px Arial', fill: '#DED125', stroke: '#000000', strokeThickness: 3 };
+		this.score = this.add.text(this.world.width -150, 3, scoreText, scoreStyle);
+		this.scorePoints = 0;
+	},
+
+	updateScore: function() {
+		// Updates the score value
+		this.scorePoints++;
+		this.score.text = 'Pontuação: ' + this.scorePoints;
+	},
+
+	createTitleText: function() {
+		// Creates the title screen text
 		var pressStartText = "Toque na tela \npara começar!";
 	    var pressStartStyle = { font: "bold 32px Arial", fill: "#ff0044", align: "center" , stroke: '#000000', strokeThickness: 6};
 	    this.pressStart = this.add.text(this.world.centerX - 120, 150, pressStartText, pressStartStyle);
