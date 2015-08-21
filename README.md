@@ -13,6 +13,6 @@ After that, go to the project folder and add a platform.
 The following is an example for Android.
 
 ```bash
-$ cordova add platform android
+$ cordova platform add android
 $ cordova run android
 ```
