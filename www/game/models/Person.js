@@ -8,6 +8,9 @@ Main.Person = function(game, x, y, image) {
 	this.checkWorldBounds = true;
 	this.outOfBoundsKill = true;
 	this.bringToTop();
+	// When extending Phaser.Sprite we need to set this property explicitly
+	this.alive = true;
+	this.events.onKilled.add(this.removePerson, this);
 
 	// Physics properties
 	this.game.physics.arcade.enable(this);
@@ -15,8 +18,14 @@ Main.Person = function(game, x, y, image) {
 	this.body.velocity.x = -200;
 
 	this.animations.play('walking');
-	this.game.add.existing(this);
 };
 
 Main.Person.prototype = Object.create(Phaser.Sprite.prototype);
 Main.Person.prototype.constructor = Main.Person;
+
+Main.Person.prototype.removePerson = function(person) {
+	if (person.parent) {
+	   person.parent.removeChild(person);
+	}
+	person.destroy;
+};

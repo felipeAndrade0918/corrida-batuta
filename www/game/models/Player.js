@@ -10,6 +10,8 @@ Main.Player = function(game, x, y) {
 	this.animations.add('running', [6, 7, 8, 7], 10, true);
 	this.checkWorldBounds = true;
 	this.outOfBoundsKill = true;
+	// When extending Phaser.Sprite we need to set this property explicitly
+	this.alive = true;
 
 	// Physics properties
 	this.game.physics.arcade.enable(this);
@@ -24,8 +26,8 @@ Main.Player = function(game, x, y) {
 Main.Player.prototype = Object.create(Phaser.Sprite.prototype);
 Main.Player.prototype.constructor = Main.Player;
 
+// This function handles the input for either the mouse or mobile devices
 Main.Player.prototype.handleInput = function() {
-	// This function handles the input for either the mouse or mobile devices
 	if ((this.game.input.mousePointer.isDown || this.game.input.pointer1.isDown) && this.body.touching.down) {
 		this.body.velocity.y = -200;
 	}
@@ -59,8 +61,8 @@ Main.Player.prototype.toggleInvincibility = function() {
 	this.invincibility = false;
 };
 
+// Creates some heart sprites which will act as the player's health
 Main.Player.prototype.setupHealth = function() {
-	// Creates some heart sprites which will act as the player's health
 	this.hearts = [];
 	this.hearts.push(this.game.add.sprite(10, 10, 'heart'));
 	this.hearts.push(this.game.add.sprite(25, 10, 'heart'))

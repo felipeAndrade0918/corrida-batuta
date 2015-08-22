@@ -158,22 +158,22 @@ Main.Game.prototype = {
 		this.scoreTimer.pause();
 	},
 
+	// Creates the score text
 	createScoreText: function() {
-		// Creates the score text
 		var scoreText = 'Pontuação: 0';
 		var scoreStyle = { font: 'bold 18px Arial', fill: '#DED125', stroke: '#000000', strokeThickness: 3 };
 		this.score = this.add.text(this.world.width -150, 3, scoreText, scoreStyle);
 		this.scorePoints = 0;
 	},
 
+	// Updates the score value
 	updateScore: function() {
-		// Updates the score value
 		this.scorePoints++;
 		this.score.text = 'Pontuação: ' + this.scorePoints;
 	},
 
+	// Creates the title screen text
 	createTitleText: function() {
-		// Creates the title screen text
 		var pressStartText = "Toque na tela \npara começar!";
 	    var pressStartStyle = { font: "bold 32px Arial", fill: "#ff0044", align: "center" , stroke: '#000000', strokeThickness: 6};
 	    this.pressStart = this.add.text(this.world.centerX - 120, 150, pressStartText, pressStartStyle);
@@ -189,12 +189,19 @@ Main.Game.prototype = {
 	    this.gameTitleTween.start();
 	},
 
+	// This is for debugging purposes
 	render: function() {
-		// This is for debugging purposes
-    	/*var renderGroup = function(thing) {
+		/*
+    	var renderGroup = function(thing) {
     		this.game.debug.body(thing);
     	};
+
+    	// Debugging collision and hit boxes
     	this.game.debug.body(this.player);
-		this.peopleGroup.forEachAlive(renderGroup, this);*/
+		this.peopleGroup.forEachAlive(renderGroup, this);
+
+		// Debbuging how many people are in the peopleGroup
+		this.game.debug.text(this.peopleGroup.children.length, 10, 50);
+		*/
 	}
 };
