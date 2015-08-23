@@ -15,7 +15,7 @@ Main.Player = function(game, x, y) {
 
 	// Physics properties
 	this.game.physics.arcade.enable(this);
-	this.body.gravity.y = 300;
+	this.body.gravity.y = 1000;
 	this.body.setSize(17, 35);
 	this.body.bounce.set(0.3);
 
@@ -29,7 +29,7 @@ Main.Player.prototype.constructor = Main.Player;
 // This function handles the input for either the mouse or mobile devices
 Main.Player.prototype.handleInput = function() {
 	if ((this.game.input.mousePointer.isDown || this.game.input.pointer1.isDown) && this.body.touching.down) {
-		this.body.velocity.y = -200;
+		this.body.velocity.y = -400;
 	}
 };
 
@@ -38,7 +38,7 @@ Main.Player.prototype.damagePlayer = function() {
 	if (!this.invincibility) {
 		this.damage(1);
 
-		// We remove the last heart
+		// We remove the last heart since we took damage
 		this.hearts[this.hearts.length -1].kill();
 		this.hearts.splice(this.hearts.length - 1, 1);
 		
@@ -52,6 +52,7 @@ Main.Player.prototype.damagePlayer = function() {
 		this.playerIsInvencible.to({ alpha: 1 }, 500);
 		this.playerIsInvencible.to({ alpha: 0.3 }, 500);
 		this.playerIsInvencible.to({ alpha: 1 }, 500);
+
 		this.playerIsInvencible.start();
 		this.playerIsInvencible.onComplete.removeAll();
 	}
