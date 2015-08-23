@@ -7,8 +7,6 @@ Main.Ground = function(game, x, y) {
 	// Physics properties
 	this.game.physics.arcade.enable(this);
 	this.body.immovable = true;
-
-	this.game.add.existing(this);
 };
 
 Main.Ground.prototype = Object.create(Phaser.Sprite.prototype);
