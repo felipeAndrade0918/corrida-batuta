@@ -7,7 +7,7 @@ Main.Player = function(game, x, y) {
 	this.health = 3;
 	this.anchor.set(0.5, 0.7);
 	this.scale.set(1.5, 1.5);
-	this.animations.add('running', [6, 7, 8, 7], 10, true);
+	this.animations.add('running', [6, 7, 8, 7], 8, true);
 	this.checkWorldBounds = true;
 	this.outOfBoundsKill = true;
 	// When extending Phaser.Sprite we need to set this property explicitly
