@@ -17,11 +17,20 @@ Main.Game.prototype = {
         else {
         	// Trying to fit the whole screen
             this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT;
-            this.scale.forceLandscape = true;
+            this.scale.forceOrientation(true, false);
             this.scale.pageAlignHorizontally = true;
             this.scale.pageAlignVertically = true;
+            this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
+            this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);
         }
-        this.scale.refresh();
+    },
+
+    enterIncorrectOrientation: function() {
+    	console.log('errado');
+    },
+
+    leaveIncorrectOrientation: function() {
+    	console.log('certo');
     },
 
 	preload: function() {
@@ -118,8 +127,7 @@ Main.Game.prototype = {
 
 		// We stop spawning people since the player just died
 		this.difficultySystem.stopSpawningPeople();
-		// We reset the difficulty to 4 again
-		this.difficultySystem.resetBackgroundSpeed();
+
 		// Hide the score text, reset its value and pause the timer
 		this.scoreSystem.pause();
 	},

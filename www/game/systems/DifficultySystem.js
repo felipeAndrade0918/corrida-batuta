@@ -3,7 +3,7 @@ Main.DifficultySystem = function(game, peopleNames) {
 	this.peopleNames = peopleNames;
 	this.peopleGroup = this.game.add.group();
 
-	this.backgroundSpeed = 4;
+	this.backgroundSpeed = 3;
 	this.personMaxRespawnTime = 7;
 
 	// Keeps spawning people when the game is running
@@ -38,17 +38,11 @@ Main.DifficultySystem.prototype = {
 	increaseDifficulty: function(scorePoints) {
 		if (scorePoints % 14 == 0) {
 			if (this.personMaxRespawnTime > 3) {
-				this.backgroundSpeed += 1;
-				
 				this.personTimer.stop();
 				this.personMaxRespawnTime -= 1;
 				this.personTimer.loop(this.game.rnd.integerInRange(3, this.personMaxRespawnTime) * 1000, this.spawnPerson, this);
 				this.personTimer.start();
 			}
 		}
-	},
-
-	resetBackgroundSpeed: function() {
-		this.backgroundSpeed = 4;
 	}
 };
