@@ -20,17 +20,7 @@ Main.Game.prototype = {
             this.scale.forceOrientation(true, false);
             this.scale.pageAlignHorizontally = true;
             this.scale.pageAlignVertically = true;
-            this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
-            this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);
         }
-    },
-
-    enterIncorrectOrientation: function() {
-    	console.log('errado');
-    },
-
-    leaveIncorrectOrientation: function() {
-    	console.log('certo');
     },
 
 	preload: function() {
