@@ -66,7 +66,9 @@ Main.Game.prototype = {
 		this.difficultySystem = new Main.DifficultySystem(this.game, this.peopleNames);
 		this.scoreSystem = new Main.ScoreSystem(this.game, this.difficultySystem);
 		
-		this.scoreSystem.createBestScoreText();		
+		this.scoreSystem.createBestScoreText();
+
+		this.playerHasRecentlyDied = false;	
 	},
 
 	update: function() {
@@ -80,7 +82,7 @@ Main.Game.prototype = {
 		} else {
 			this.background.tilePosition.x -= 1;
 
-			if (this.input.pointer1.isDown || this.input.mousePointer.isDown) {
+			if (!this.playerHasRecentlyDied && (this.input.pointer1.isDown || this.input.mousePointer.isDown)) {
 				this.startGame();
 			}
 		}
@@ -96,6 +98,7 @@ Main.Game.prototype = {
 		if (!this.player.alive) {
 			this.player.reset(50, this.world.height - 60, 3);
 		}
+		
 		this.player.alpha = 1;
 		this.player.setupHealth();
 		
@@ -120,6 +123,17 @@ Main.Game.prototype = {
 
 		// Hide the score text, reset its value and pause the timer
 		this.scoreSystem.pause();
+
+		// Delaying the player input so he can at least see the title screen again after dying
+		this.delayPlayerInput();
+	},
+
+	delayPlayerInput: function() {
+		this.playerHasRecentlyDied = true;
+
+		this.game.time.events.add(Phaser.Timer.SECOND * 1, function() {
+			this.playerHasRecentlyDied = false;
+		}, this);
 	},
 
 	// Creates the title screen text
