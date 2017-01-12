@@ -39,20 +39,35 @@ Main.Game.prototype = {
 
 		this.load.spritesheet('bruna', 'assets/bruna.png', 32, 49);
 		this.peopleNames.push('bruna');
+		
+		this.load.audio('backgroundMusic', 'assets/audio/8-bit loop.mp3');
+		this.load.audio('jumpFx', 'assets/audio/CK_TopSpin2.wav');
+		this.load.audio('hitFx', 'assets/audio/hit_from_CK.wav');
 	},
 
 	create: function() {
+		// Adding music and sounds
+		this.backgroundMusic = this.game.add.audio('backgroundMusic');
+		this.jumpFx = this.game.add.audio('jumpFx');
+		this.hitFx = this.game.add.audio('hitFx');
+
+		//  Being mp3 files these take time to decode, so we can't play them instantly
+		//  Using setDecodedCallback we can be notified when they're ALL ready for use.
+		//  The audio files could decode in ANY order, we can never be sure which it'll be.
+		this.game.sound.setDecodedCallback([this.backgroundMusic], this.playBackgroundMusic, this);
+
 		// Starting the Arcade Physics System
 		this.physics.startSystem(Phaser.Physics.ARCADE);
 
 		// Adding the background and scaling its size
 		this.background = this.add.tileSprite(0, 0, 320, 240, 'background');
 		this.background.scale.y = 1.3;
+		
 		// Without this we would not be able to see other sprites
 		this.world.sendToBack(this.background);
 
 		// The player. He starts invisible
-		this.player = new Main.Player(this.game, 50, this.world.height - 60);
+		this.player = new Main.Player(this.game, 50, this.world.height - 60, this.jumpFx, this.hitFx);
 		this.player.alpha = 0;
 		this.player.events.onKilled.add(this.resetGame, this);
 
@@ -68,7 +83,8 @@ Main.Game.prototype = {
 		
 		this.scoreSystem.createBestScoreText();
 
-		this.playerHasRecentlyDied = false;	
+		this.playerHasRecentlyDied = false;
+
 	},
 
 	update: function() {
@@ -136,15 +152,20 @@ Main.Game.prototype = {
 		}, this);
 	},
 
+	playBackgroundMusic: function() {
+		this.backgroundMusic.loop = true;
+		this.backgroundMusic.play();
+	},
+
 	// Creates the title screen text
 	createTitleText: function() {
 		var pressStartText = "Toque na tela \npara começar!";
 	    var pressStartStyle = { font: "bold 18px Arial", fill: "#ff0044", align: "center" , stroke: '#000000', strokeThickness: 6};
-	    this.pressStart = this.add.text(this.world.centerX - 65, 150, pressStartText, pressStartStyle);
+	    this.pressStart = this.add.text(this.world.centerX - 55, 150, pressStartText, pressStartStyle);
 
 	    var gameTitleText = "Corrida batuta!";
 	    var gameTitleStyle = { font: "bold 40px Arial", fill: "#BC26D6", align: "center" , stroke: '#000000', strokeThickness: 6};
-	    this.gameTitle = this.add.text(this.world.centerX - 145, 20, gameTitleText, gameTitleStyle);
+	    this.gameTitle = this.add.text(this.world.centerX - 135, 20, gameTitleText, gameTitleStyle);
 
 	    // Title animations
 	    this.gameTitleTween = this.add.tween(this.gameTitle);

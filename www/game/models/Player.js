@@ -1,6 +1,6 @@
 var Main = Main || {};
 
-Main.Player = function(game, x, y) {
+Main.Player = function(game, x, y, jumpFx, hitFx) {
 	Phaser.Sprite.call(this, game, x, y, 'player');
 
 	// Regular properties
@@ -19,6 +19,10 @@ Main.Player = function(game, x, y) {
 	this.body.setSize(17, 35);
 	this.body.bounce.set(0.3);
 
+	// Custom properties
+	this.jumpFx = jumpFx;
+	this.hitFx = hitFx;
+
 	this.animations.play('running');
 	this.game.add.existing(this);
 };
@@ -30,12 +34,14 @@ Main.Player.prototype.constructor = Main.Player;
 Main.Player.prototype.handleInput = function() {
 	if ((this.game.input.mousePointer.isDown || this.game.input.pointer1.isDown) && this.body.touching.down) {
 		this.body.velocity.y = -400;
+		this.jumpFx.play();
 	}
 };
 
 Main.Player.prototype.damagePlayer = function() {
 	// If the player is not invincible then we can damage him
 	if (!this.invincibility) {
+		this.hitFx.play();
 		this.damage(1);
 
 		// We remove the last heart since we took damage
