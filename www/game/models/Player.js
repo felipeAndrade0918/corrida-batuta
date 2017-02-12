@@ -16,7 +16,7 @@ Main.Player = function(game, x, y, jumpFx, hitFx) {
 	// Physics properties
 	this.game.physics.arcade.enable(this);
 	this.body.gravity.y = 1000;
-	this.body.setSize(17, 35);
+	this.body.setSize(17, 35, 8, 10);
 	this.body.bounce.set(0.3);
 
 	// Custom properties
